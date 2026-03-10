@@ -57,9 +57,9 @@ export default function StatsTab({ workouts }) {
               <g key={v}>
                 <line
                   x1={PAD.left} y1={y} x2={W - PAD.right} y2={y}
-                  stroke="#1e293b" strokeWidth="1"
+                  stroke="#2d2a27" strokeWidth="1"
                 />
-                <text x={PAD.left - 5} y={y + 4} textAnchor="end" fill="#475569" fontSize="10">
+                <text x={PAD.left - 5} y={y + 4} textAnchor="end" fill="#6b6560" fontSize="10">
                   {v}
                 </text>
               </g>
@@ -89,7 +89,7 @@ export default function StatsTab({ workouts }) {
                 {val > 0 && (
                   <rect
                     x={x} y={y} width={barW} height={barH}
-                    fill={isEstimated ? '#818cf8' : '#6366f1'}
+                    fill={isEstimated ? '#fb923c' : '#f97316'}
                     opacity={isHovered ? 1 : 0.85}
                     rx="2"
                   />
@@ -99,7 +99,7 @@ export default function StatsTab({ workouts }) {
                     x={x + barW / 2}
                     y={PAD.top + plotH + 18}
                     textAnchor="middle"
-                    fill="#475569"
+                    fill="#6b6560"
                     fontSize="9.5"
                   >
                     {label}
@@ -123,10 +123,10 @@ export default function StatsTab({ workouts }) {
         </svg>
         <div className="chart-legend">
           <span className="legend-item">
-            <span className="legend-dot" style={{ background: '#6366f1' }} /> Logged
+            <span className="legend-dot" style={{ background: '#f97316' }} /> Logged
           </span>
           <span className="legend-item">
-            <span className="legend-dot" style={{ background: '#818cf8', opacity: 0.85 }} /> Estimated
+            <span className="legend-dot" style={{ background: '#fb923c', opacity: 0.85 }} /> Estimated
           </span>
         </div>
       </div>
