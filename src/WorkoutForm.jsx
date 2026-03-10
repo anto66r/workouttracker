@@ -36,7 +36,7 @@ export default function WorkoutForm({ onAdd }) {
     setError(null)
   }
 
-  const addSeries = () => setSeries(s => [...s, { ...emptySeries }])
+  const addSeries = () => setSeries(s => [...s, { ...s[s.length - 1] }])
   const removeSeries = (i) => setSeries(s => s.filter((_, idx) => idx !== i))
   const updateSeries = (i, field, val) =>
     setSeries(s => s.map((row, idx) => idx === i ? { ...row, [field]: val } : row))
