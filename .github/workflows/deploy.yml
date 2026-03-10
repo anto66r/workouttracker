@@ -1,0 +1,45 @@
+name: Deploy to Hostinger
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Prepare deploy directory
+        run: |
+          mkdir -p /tmp/deploy
+          cp -r dist/* /tmp/deploy/
+          cp -r api /tmp/deploy/api
+
+      - name: Install lftp
+        run: sudo apt-get install -y lftp
+
+      - name: Deploy via FTP
+        env:
+          FTP_HOST: ${{ secrets.FTP_HOST }}
+          FTP_USER: ${{ secrets.FTP_USER }}
+          FTP_PASS: ${{ secrets.FTP_PASS }}
+        run: |
+          lftp -u "$FTP_USER,$FTP_PASS" \
+            -e "set ftp:ssl-allow no; set ftp:passive-mode on; set ftp:use-pasv-address false; set net:timeout 30; set net:max-retries 2; mirror --reverse --verbose /tmp/deploy/ /; quit" \
+            ftp://$FTP_HOST
