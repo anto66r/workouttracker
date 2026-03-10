@@ -39,9 +39,11 @@ if ($method === 'GET') {
         exit;
     }
     $workouts = loadWorkouts($dataFile);
+    $rawDatetime = $input['datetime'] ?? null;
+    $parsedDatetime = $rawDatetime ? date('c', strtotime($rawDatetime)) : date('c');
     $workout = [
         'id' => uniqid('w_', true),
-        'datetime' => date('c'),
+        'datetime' => $parsedDatetime,
         'type' => $input['type'],
         'details' => $input['details'] ?? [],
     ];

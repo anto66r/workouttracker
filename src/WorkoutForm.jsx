@@ -11,8 +11,17 @@ const ALL_TYPES = [...CARDIO_TYPES, ...STRENGTH_TYPES]
 const emptyCardio = { distance: '', calories: '' }
 const emptySeries = { reps: '', weight: '' }
 
+function nowLocalDatetime() {
+  const d = new Date()
+  d.setSeconds(0, 0)
+  return new Date(d.getTime() - d.getTimezoneOffset() * 60000)
+    .toISOString()
+    .slice(0, 16)
+}
+
 export default function WorkoutForm({ onAdd }) {
   const [type, setType] = useState(ALL_TYPES[0])
+  const [datetime, setDatetime] = useState(nowLocalDatetime)
   const [cardio, setCardio] = useState(emptyCardio)
   const [series, setSeries] = useState([{ ...emptySeries }])
   const [saving, setSaving] = useState(false)
@@ -54,7 +63,7 @@ export default function WorkoutForm({ onAdd }) {
 
     setSaving(true)
     try {
-      await onAdd({ type, details })
+      await onAdd({ type, datetime, details })
       setCardio(emptyCardio)
       setSeries([{ ...emptySeries }])
     } catch (err) {
@@ -78,6 +87,13 @@ export default function WorkoutForm({ onAdd }) {
             {STRENGTH_TYPES.map(t => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
           </optgroup>
         </select>
+
+        <label style={{ marginTop: '0.75rem' }}>Date & Time</label>
+        <input
+          type="datetime-local"
+          value={datetime}
+          onChange={e => setDatetime(e.target.value)}
+        />
 
         {isCardio ? (
           <div className="row row-2" style={{ marginTop: '0.75rem' }}>
