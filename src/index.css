@@ -63,11 +63,12 @@ input[type="datetime-local"] {
   border-radius: 6px;
   color: #e2e8f0;
   padding: 0.45rem 0.65rem;
-  font-size: 0.9rem;
+  font-size: 1rem; /* ≥16px prevents iOS zoom */
   outline: none;
   transition: border-color 0.15s;
-  -webkit-appearance: none;
 }
+
+select { appearance: auto; }
 
 select:focus, input:focus { border-color: #6366f1; box-shadow: 0 0 0 2px #6366f120; }
 
@@ -113,7 +114,9 @@ button {
   background: transparent;
   color: #475569;
   font-size: 1rem;
-  padding: 0.25rem 0.45rem;
+  padding: 0.4rem 0.6rem;
+  min-width: 2.25rem;
+  min-height: 2.25rem;
   line-height: 1;
 }
 .btn-danger:hover { color: #f87171; }
@@ -184,7 +187,9 @@ button {
   background: transparent;
   color: #334155;
   font-size: 1rem;
-  padding: 0.1rem 0.3rem;
+  padding: 0.4rem 0.5rem;
+  min-width: 2.25rem;
+  min-height: 2.25rem;
   line-height: 1;
   border-radius: 4px;
 }
@@ -206,4 +211,31 @@ button {
   padding: 0.6rem 0.875rem;
   margin-bottom: 0.75rem;
   font-size: 0.85rem;
+}
+
+/* ── Responsive ── */
+@media (max-width: 400px) {
+  #root { padding: 1rem 0.75rem 2.5rem; }
+
+  /* Stack type + datetime vertically on very small screens */
+  .row-2 { grid-template-columns: 1fr; }
+
+  /* Tighten series rows: hide set number, show only reps/weight/delete */
+  .series-row {
+    grid-template-columns: 1fr 1fr auto;
+  }
+  .series-row .set-num { display: none; }
+
+  .workout-row {
+    grid-template-columns: 3rem auto 1fr auto;
+    gap: 0.4rem;
+    padding: 0.4rem 0.25rem;
+  }
+}
+
+@media (hover: none) {
+  /* On touch devices, show delete button slightly visible at rest */
+  .btn-del { color: #475569; }
+  .workout-row:hover { background: transparent; }
+  .workout-row:active { background: #1e293b; }
 }
