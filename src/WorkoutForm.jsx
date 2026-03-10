@@ -78,25 +78,30 @@ export default function WorkoutForm({ onAdd }) {
       <h2>Log Workout</h2>
       {error && <div className="error">{error}</div>}
       <form onSubmit={handleSubmit}>
-        <label>Type</label>
-        <select value={type} onChange={handleTypeChange}>
-          <optgroup label="Cardio">
-            {CARDIO_TYPES.map(t => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
-          </optgroup>
-          <optgroup label="Strength">
-            {STRENGTH_TYPES.map(t => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
-          </optgroup>
-        </select>
-
-        <label style={{ marginTop: '0.75rem' }}>Date & Time</label>
-        <input
-          type="datetime-local"
-          value={datetime}
-          onChange={e => setDatetime(e.target.value)}
-        />
+        <div className="row row-2">
+          <div>
+            <label>Type</label>
+            <select value={type} onChange={handleTypeChange}>
+              <optgroup label="Cardio">
+                {CARDIO_TYPES.map(t => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
+              </optgroup>
+              <optgroup label="Strength">
+                {STRENGTH_TYPES.map(t => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
+              </optgroup>
+            </select>
+          </div>
+          <div>
+            <label>Date & Time</label>
+            <input
+              type="datetime-local"
+              value={datetime}
+              onChange={e => setDatetime(e.target.value)}
+            />
+          </div>
+        </div>
 
         {isCardio ? (
-          <div className="row row-2" style={{ marginTop: '0.75rem' }}>
+          <div className="row row-2">
             <div>
               <label>Distance (m)</label>
               <input
@@ -119,7 +124,7 @@ export default function WorkoutForm({ onAdd }) {
             </div>
           </div>
         ) : (
-          <div style={{ marginTop: '0.75rem' }}>
+          <div>
             <label>Sets</label>
             {series.map((s, i) => (
               <div className="series-row" key={i}>
