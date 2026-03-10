@@ -1,7 +1,7 @@
 const CARDIO_TYPES = ['rowing', 'running', 'elliptical', 'bike']
 
 const KCAL_PER_M = {
-  rowing: 0.15,     // 2000m ≈ 300 kcal
+  rowing: 0.057,     // 1000m ≈ 57 kcal
   running: 0.08,    // 10km ≈ 800 kcal
   elliptical: 0.065,
   bike: 0.04,
@@ -35,7 +35,7 @@ export function estimateCalories(workout) {
   return { kcal: Math.round(total), estimated: true }
 }
 
-// Returns { [YYYY-MM-DD]: { kcal, hasEstimated, hasActual } }
+// Returns { [YYYY-MM-DD]: { kcal, actualKcal, estimatedKcal } }
 export function dailyCalories(workouts) {
   const map = {}
 
@@ -44,10 +44,10 @@ export function dailyCalories(workouts) {
     const result = estimateCalories(w)
     if (!result) continue
 
-    if (!map[day]) map[day] = { kcal: 0, hasEstimated: false, hasActual: false }
+    if (!map[day]) map[day] = { kcal: 0, actualKcal: 0, estimatedKcal: 0 }
     map[day].kcal += result.kcal
-    if (result.estimated) map[day].hasEstimated = true
-    else map[day].hasActual = true
+    if (result.estimated) map[day].estimatedKcal += result.kcal
+    else map[day].actualKcal += result.kcal
   }
 
   return map
