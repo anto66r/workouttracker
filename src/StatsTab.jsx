@@ -32,8 +32,6 @@ export default function StatsTab({ workouts }) {
 
   return (
     <div>
-      <h2>Stats</h2>
-
       <div className="stats-summary">
         <div className="stat-box">
           <div className="stat-value">{workouts.length}</div>

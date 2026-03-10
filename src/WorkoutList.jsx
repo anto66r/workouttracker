@@ -40,7 +40,6 @@ export default function WorkoutList({ workouts, onDelete }) {
   if (!workouts.length) {
     return (
       <div className="history">
-        <h2>History</h2>
         <div className="empty">No workouts logged yet.</div>
       </div>
     )
@@ -54,7 +53,6 @@ export default function WorkoutList({ workouts, onDelete }) {
 
   return (
     <div className="history">
-      <h2>History</h2>
       {Object.entries(grouped).map(([day, items]) => (
         <div className="day-group" key={day}>
           <div className="day-header">{dayLabel(items[0].datetime)}</div>

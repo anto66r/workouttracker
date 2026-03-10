@@ -129,8 +129,7 @@ export default function WorkoutForm({ onAdd }) {
             {series.map((s, i) => (
               <div className="series-row" key={i}>
                 <div className="set-num">
-                  <label style={{ marginTop: 0 }}>Set {i + 1}</label>
-                  <input disabled value={i + 1} style={{ textAlign: 'center', color: '#64748b' }} />
+                  <div className="set-num-badge">{i + 1}</div>
                 </div>
                 <div>
                   <label style={{ marginTop: 0 }}>Reps</label>
