@@ -1,12 +1,14 @@
 import { useState, useEffect, useCallback } from 'react'
 import WorkoutForm from './WorkoutForm'
 import WorkoutList from './WorkoutList'
+import StatsTab from './StatsTab'
 
 const API = '/api/workouts.php'
 
 export default function App() {
   const [workouts, setWorkouts] = useState([])
   const [error, setError] = useState(null)
+  const [tab, setTab] = useState('history')
 
   const fetchWorkouts = useCallback(async () => {
     try {
@@ -40,7 +42,24 @@ export default function App() {
       <h1>Workout Tracker</h1>
       {error && <div className="error">{error}</div>}
       <WorkoutForm onAdd={addWorkout} />
-      <WorkoutList workouts={workouts} onDelete={deleteWorkout} />
+      <div className="tabs">
+        <button
+          className={`tab-btn${tab === 'history' ? ' active' : ''}`}
+          onClick={() => setTab('history')}
+        >
+          History
+        </button>
+        <button
+          className={`tab-btn${tab === 'stats' ? ' active' : ''}`}
+          onClick={() => setTab('stats')}
+        >
+          Stats
+        </button>
+      </div>
+      {tab === 'history'
+        ? <WorkoutList workouts={workouts} onDelete={deleteWorkout} />
+        : <StatsTab workouts={workouts} />
+      }
     </div>
   )
 }
