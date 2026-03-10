@@ -57,9 +57,9 @@ export default function StatsTab({ workouts }) {
               <g key={v}>
                 <line
                   x1={PAD.left} y1={y} x2={W - PAD.right} y2={y}
-                  stroke="#2d2a27" strokeWidth="1"
+                  stroke="#27272a" strokeWidth="1"
                 />
-                <text x={PAD.left - 5} y={y + 4} textAnchor="end" fill="#6b6560" fontSize="10">
+                <text x={PAD.left - 5} y={y + 4} textAnchor="end" fill="#52525b" fontSize="10">
                   {v}
                 </text>
               </g>
@@ -89,8 +89,8 @@ export default function StatsTab({ workouts }) {
                 {val > 0 && (
                   <rect
                     x={x} y={y} width={barW} height={barH}
-                    fill={isEstimated ? '#fb923c' : '#f97316'}
-                    opacity={isHovered ? 1 : 0.85}
+                    fill={isEstimated ? '#52525b' : '#3b82f6'}
+                    opacity={isHovered ? 1 : 0.9}
                     rx="2"
                   />
                 )}
@@ -99,7 +99,7 @@ export default function StatsTab({ workouts }) {
                     x={x + barW / 2}
                     y={PAD.top + plotH + 18}
                     textAnchor="middle"
-                    fill="#6b6560"
+                    fill="#52525b"
                     fontSize="9.5"
                   >
                     {label}
@@ -110,7 +110,7 @@ export default function StatsTab({ workouts }) {
                     x={x + barW / 2}
                     y={y - 5}
                     textAnchor="middle"
-                    fill="#e2e8f0"
+                    fill="#d4d4d8"
                     fontSize="11"
                     fontWeight="600"
                   >
@@ -123,10 +123,10 @@ export default function StatsTab({ workouts }) {
         </svg>
         <div className="chart-legend">
           <span className="legend-item">
-            <span className="legend-dot" style={{ background: '#f97316' }} /> Logged
+            <span className="legend-dot" style={{ background: '#3b82f6' }} /> Logged
           </span>
           <span className="legend-item">
-            <span className="legend-dot" style={{ background: '#fb923c', opacity: 0.85 }} /> Estimated
+            <span className="legend-dot" style={{ background: '#52525b' }} /> Estimated
           </span>
         </div>
       </div>
