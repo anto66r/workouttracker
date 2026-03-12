@@ -197,40 +197,31 @@ export default function WorkoutForm({ onAdd, workouts }) {
                 </div>
                 <div className="series-inputs">
                   {isTimed ? (
-                    <div>
-                      <label style={{ marginTop: 0 }}>Duration (s)</label>
+                    <input
+                      type="number"
+                      min="0"
+                      placeholder="Duration (s)"
+                      value={s.time}
+                      onChange={e => updateSeries(i, 'time', e.target.value)}
+                    />
+                  ) : (
+                    <>
                       <input
                         type="number"
                         min="0"
-                        placeholder="60"
-                        value={s.time}
-                        onChange={e => updateSeries(i, 'time', e.target.value)}
+                        placeholder="Reps"
+                        value={s.reps}
+                        onChange={e => updateSeries(i, 'reps', e.target.value)}
                       />
-                    </div>
-                  ) : (
-                    <>
-                      <div>
-                        <label style={{ marginTop: 0 }}>Reps</label>
+                      {!isBodyweight && (
                         <input
                           type="number"
                           min="0"
-                          placeholder="12"
-                          value={s.reps}
-                          onChange={e => updateSeries(i, 'reps', e.target.value)}
+                          step="0.5"
+                          placeholder="Weight (kg)"
+                          value={s.weight}
+                          onChange={e => updateSeries(i, 'weight', e.target.value)}
                         />
-                      </div>
-                      {!isBodyweight && (
-                        <div>
-                          <label style={{ marginTop: 0 }}>Weight (kg)</label>
-                          <input
-                            type="number"
-                            min="0"
-                            step="0.5"
-                            placeholder="20"
-                            value={s.weight}
-                            onChange={e => updateSeries(i, 'weight', e.target.value)}
-                          />
-                        </div>
                       )}
                     </>
                   )}
