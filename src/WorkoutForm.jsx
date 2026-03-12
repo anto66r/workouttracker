@@ -189,7 +189,19 @@ export default function WorkoutForm({ onAdd, workouts }) {
           </div>
         ) : (
           <div>
-            <label>Sets</label>
+            <div className="series-header">
+              <span>Sets</span>
+              <div className="series-header-inputs">
+                {isTimed ? (
+                  <span>Duration (s)</span>
+                ) : (
+                  <>
+                    <span>Reps</span>
+                    {!isBodyweight && <span>Weight (kg)</span>}
+                  </>
+                )}
+              </div>
+            </div>
             {series.map((s, i) => (
               <div className="series-row" key={i}>
                 <div className="set-num">
