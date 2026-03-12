@@ -85,13 +85,18 @@ select:focus, input:focus { border-color: #60a5fa; box-shadow: 0 0 0 2px #3b82f6
   gap: 0.5rem;
   margin-bottom: 0.4rem;
 }
-.series-row > div {
-  flex: 1;
-}
-.series-row > div.set-num {
+.series-row .set-num {
   flex: 0 0 2rem;
 }
-.series-row > .btn-danger {
+.series-row .series-inputs {
+  flex: 1;
+  display: flex;
+  gap: 0.5rem;
+}
+.series-inputs > div {
+  flex: 1;
+}
+.series-row .btn-danger {
   flex: 0 0 auto;
 }
 
@@ -338,7 +343,7 @@ button {
 
   .row-2 { grid-template-columns: 1fr; }
 
-  .series-row > div.set-num {
+  .series-row .set-num {
     flex: 0 0 1.5rem;
   }
 

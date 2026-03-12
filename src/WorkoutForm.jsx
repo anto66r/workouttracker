@@ -195,30 +195,31 @@ export default function WorkoutForm({ onAdd, workouts }) {
                 <div className="set-num">
                   <div className="set-num-badge">{i + 1}</div>
                 </div>
-                {isTimed ? (
-                  <div>
-                    <label style={{ marginTop: 0 }}>Duration (s)</label>
-                    <input
-                      type="number"
-                      min="0"
-                      placeholder="60"
-                      value={s.time}
-                      onChange={e => updateSeries(i, 'time', e.target.value)}
-                    />
-                  </div>
-                ) : (
-                  <>
+                <div className="series-inputs">
+                  {isTimed ? (
                     <div>
-                      <label style={{ marginTop: 0 }}>Reps</label>
+                      <label style={{ marginTop: 0 }}>Duration (s)</label>
                       <input
                         type="number"
                         min="0"
-                        placeholder="12"
-                        value={s.reps}
-                        onChange={e => updateSeries(i, 'reps', e.target.value)}
+                        placeholder="60"
+                        value={s.time}
+                        onChange={e => updateSeries(i, 'time', e.target.value)}
                       />
                     </div>
-                    {!isBodyweight && (
+                  ) : (
+                    <>
+                      <div>
+                        <label style={{ marginTop: 0 }}>Reps</label>
+                        <input
+                          type="number"
+                          min="0"
+                          placeholder="12"
+                          value={s.reps}
+                          onChange={e => updateSeries(i, 'reps', e.target.value)}
+                        />
+                      </div>
+                      {!isBodyweight && (
                         <div>
                           <label style={{ marginTop: 0 }}>Weight (kg)</label>
                           <input
@@ -230,13 +231,13 @@ export default function WorkoutForm({ onAdd, workouts }) {
                             onChange={e => updateSeries(i, 'weight', e.target.value)}
                           />
                         </div>
-                    )}
-                  </>
-                )}
+                      )}
+                    </>
+                  )}
+                </div>
                 <button
                   type="button"
                   className="btn-danger"
-
                   onClick={() => removeSeries(i)}
                   disabled={series.length === 1}
                   title="Remove set"
