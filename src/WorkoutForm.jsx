@@ -209,6 +209,7 @@ export default function WorkoutForm({ onAdd }) {
                 <button
                   type="button"
                   className="btn-danger"
+                  style={isTimed || isBodyweight ? { gridColumn: '-1' } : undefined}
                   onClick={() => removeSeries(i)}
                   disabled={series.length === 1}
                   title="Remove set"
