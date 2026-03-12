@@ -1,9 +1,9 @@
 import { useState } from 'react'
 
-const CARDIO_TYPES = ['rowing', 'running', 'elliptical', 'bike']
+const CARDIO_TYPES = ['bike', 'elliptical', 'rowing', 'running']
 const STRENGTH_TYPES = [
-  'biceps', 'triceps', 'chest', 'back', 'shoulders',
-  'quads', 'hamstrings', 'glutes', 'calves', 'abs', 'forearms',
+  'abs', 'back', 'biceps', 'calves', 'chest',
+  'forearms', 'glutes', 'hamstrings', 'quads', 'shoulders', 'triceps',
 ]
 const BODYWEIGHT_TYPES = ['crunches']
 const TIMED_TYPES = ['plank']
