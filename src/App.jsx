@@ -41,7 +41,7 @@ export default function App() {
     <div>
       <h1>Workout Tracker</h1>
       {error && <div className="error">{error}</div>}
-      <WorkoutForm onAdd={addWorkout} />
+      <WorkoutForm onAdd={addWorkout} workouts={workouts} />
       <div className="tabs">
         <button
           className={`tab-btn${tab === 'history' ? ' active' : ''}`}

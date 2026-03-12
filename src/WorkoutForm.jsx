@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const CARDIO_TYPES = ['bike', 'elliptical', 'rowing', 'running']
 const STRENGTH_TYPES = [
@@ -23,13 +23,14 @@ function nowLocalDatetime() {
     .slice(0, 16)
 }
 
-export default function WorkoutForm({ onAdd }) {
+export default function WorkoutForm({ onAdd, workouts }) {
   const [type, setType] = useState(ALL_TYPES[0])
   const [datetime, setDatetime] = useState(nowLocalDatetime)
   const [cardio, setCardio] = useState(emptyCardio)
   const [series, setSeries] = useState([{ ...emptySeries }])
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
+  const [initialized, setInitialized] = useState(false)
 
   const isCardio = CARDIO_TYPES.includes(type)
   const isBodyweight = BODYWEIGHT_TYPES.includes(type)
@@ -41,11 +42,37 @@ export default function WorkoutForm({ onAdd }) {
     return { ...emptySeries }
   }
 
+  function applyLastWorkout(t, wks) {
+    const last = [...wks].reverse().find(w => w.type === t)
+    if (!last) {
+      setCardio(emptyCardio)
+      setSeries([emptySeriesForType(t)])
+      return
+    }
+    const d = last.details
+    if (CARDIO_TYPES.includes(t)) {
+      setCardio({ distance: d.distance ?? '', calories: d.calories ?? '' })
+    } else {
+      const rows = (d.series ?? []).map(s => {
+        if (TIMED_TYPES.includes(t)) return { time: s.time ?? '' }
+        if (BODYWEIGHT_TYPES.includes(t)) return { reps: s.reps ?? '' }
+        return { reps: s.reps ?? '', weight: s.weight ?? '' }
+      })
+      setSeries(rows.length ? rows : [emptySeriesForType(t)])
+    }
+  }
+
+  useEffect(() => {
+    if (!initialized && workouts.length > 0) {
+      applyLastWorkout(type, workouts)
+      setInitialized(true)
+    }
+  }, [workouts, initialized])
+
   const handleTypeChange = (e) => {
     const t = e.target.value
     setType(t)
-    setCardio(emptyCardio)
-    setSeries([emptySeriesForType(t)])
+    applyLastWorkout(t, workouts)
     setError(null)
   }
 
