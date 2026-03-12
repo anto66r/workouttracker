@@ -164,7 +164,7 @@ export default function WorkoutForm({ onAdd }) {
           <div>
             <label>Sets</label>
             {series.map((s, i) => (
-              <div className="series-row" key={i}>
+              <div className="series-row" key={i} style={isTimed || isBodyweight ? { gridTemplateColumns: '2rem 1fr auto' } : undefined}>
                 <div className="set-num">
                   <div className="set-num-badge">{i + 1}</div>
                 </div>
@@ -209,7 +209,7 @@ export default function WorkoutForm({ onAdd }) {
                 <button
                   type="button"
                   className="btn-danger"
-                  style={isTimed || isBodyweight ? { gridColumn: '-1' } : undefined}
+
                   onClick={() => removeSeries(i)}
                   disabled={series.length === 1}
                   title="Remove set"
