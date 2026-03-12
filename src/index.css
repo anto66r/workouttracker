@@ -129,7 +129,7 @@ select:focus, input:focus {
 }
 .series-row {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   gap: 0.5rem;
   margin-bottom: 0.35rem;
 }
