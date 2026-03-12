@@ -80,24 +80,25 @@ select:focus, input:focus { border-color: #60a5fa; box-shadow: 0 0 0 2px #3b82f6
 
 /* ── Sets ── */
 .series-row {
-  display: grid;
-  grid-template-columns: 2rem 1fr 1fr auto;
+  display: flex;
+  align-items: flex-end;
   gap: 0.5rem;
-  align-items: center;
   margin-bottom: 0.4rem;
 }
-.series-row--single {
-  grid-template-columns: 2rem 1fr auto;
+.series-row > div {
+  flex: 1;
 }
-.series-row--single .btn-danger {
-  align-self: end;
+.series-row > div.set-num {
+  flex: 0 0 2rem;
+}
+.series-row > .btn-danger {
+  flex: 0 0 auto;
 }
 
 .set-num {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-top: 0.6rem;
 }
 
 .set-num-badge {
@@ -337,11 +338,8 @@ button {
 
   .row-2 { grid-template-columns: 1fr; }
 
-  .series-row {
-    grid-template-columns: 1.5rem 1fr 1fr auto;
-  }
-  .series-row--single {
-    grid-template-columns: 1.5rem 1fr auto;
+  .series-row > div.set-num {
+    flex: 0 0 1.5rem;
   }
 
   .workout-row {

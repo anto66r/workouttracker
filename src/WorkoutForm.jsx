@@ -191,7 +191,7 @@ export default function WorkoutForm({ onAdd, workouts }) {
           <div>
             <label>Sets</label>
             {series.map((s, i) => (
-              <div className={`series-row${isBodyweight || isTimed ? ' series-row--single' : ''}`} key={i}>
+              <div className="series-row" key={i}>
                 <div className="set-num">
                   <div className="set-num-badge">{i + 1}</div>
                 </div>
