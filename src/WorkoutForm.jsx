@@ -164,7 +164,7 @@ export default function WorkoutForm({ onAdd }) {
           <div>
             <label>Sets</label>
             {series.map((s, i) => (
-              <div className="series-row" key={i} style={isTimed || isBodyweight ? { gridTemplateColumns: '2rem 1fr auto' } : undefined}>
+              <div className="series-row" key={i}>
                 <div className="set-num">
                   <div className="set-num-badge">{i + 1}</div>
                 </div>
@@ -191,21 +191,25 @@ export default function WorkoutForm({ onAdd }) {
                         onChange={e => updateSeries(i, 'reps', e.target.value)}
                       />
                     </div>
-                    {!isBodyweight && (
-                      <div>
-                        <label style={{ marginTop: 0 }}>Weight (kg)</label>
-                        <input
-                          type="number"
-                          min="0"
-                          step="0.5"
-                          placeholder="20"
-                          value={s.weight}
-                          onChange={e => updateSeries(i, 'weight', e.target.value)}
-                        />
-                      </div>
-                    )}
+                    {isBodyweight
+                      ? <div />
+                      : (
+                        <div>
+                          <label style={{ marginTop: 0 }}>Weight (kg)</label>
+                          <input
+                            type="number"
+                            min="0"
+                            step="0.5"
+                            placeholder="20"
+                            value={s.weight}
+                            onChange={e => updateSeries(i, 'weight', e.target.value)}
+                          />
+                        </div>
+                      )
+                    }
                   </>
                 )}
+                {isTimed && <div />}
                 <button
                   type="button"
                   className="btn-danger"
