@@ -5,11 +5,15 @@ const STRENGTH_TYPES = [
   'biceps', 'triceps', 'chest', 'back', 'shoulders',
   'quads', 'hamstrings', 'glutes', 'calves', 'abs', 'forearms',
 ]
+const BODYWEIGHT_TYPES = ['crunches']
+const TIMED_TYPES = ['plank']
 
-const ALL_TYPES = [...CARDIO_TYPES, ...STRENGTH_TYPES]
+const ALL_TYPES = [...CARDIO_TYPES, ...STRENGTH_TYPES, ...BODYWEIGHT_TYPES, ...TIMED_TYPES]
 
 const emptyCardio = { distance: '', calories: '' }
 const emptySeries = { reps: '', weight: '' }
+const emptyBodyweightSeries = { reps: '' }
+const emptyTimedSeries = { time: '' }
 
 function nowLocalDatetime() {
   const d = new Date()
@@ -28,15 +32,27 @@ export default function WorkoutForm({ onAdd }) {
   const [error, setError] = useState(null)
 
   const isCardio = CARDIO_TYPES.includes(type)
+  const isBodyweight = BODYWEIGHT_TYPES.includes(type)
+  const isTimed = TIMED_TYPES.includes(type)
+
+  function emptySeriesForType(t) {
+    if (TIMED_TYPES.includes(t)) return { ...emptyTimedSeries }
+    if (BODYWEIGHT_TYPES.includes(t)) return { ...emptyBodyweightSeries }
+    return { ...emptySeries }
+  }
 
   const handleTypeChange = (e) => {
-    setType(e.target.value)
+    const t = e.target.value
+    setType(t)
     setCardio(emptyCardio)
-    setSeries([{ ...emptySeries }])
+    setSeries([emptySeriesForType(t)])
     setError(null)
   }
 
-  const addSeries = () => setSeries(s => [...s, { ...s[s.length - 1] }])
+  const addSeries = () => {
+    setDatetime(nowLocalDatetime())
+    setSeries(s => [...s, { ...s[s.length - 1] }])
+  }
   const removeSeries = (i) => setSeries(s => s.filter((_, idx) => idx !== i))
   const updateSeries = (i, field, val) =>
     setSeries(s => s.map((row, idx) => idx === i ? { ...row, [field]: val } : row))
@@ -52,6 +68,20 @@ export default function WorkoutForm({ onAdd }) {
         return
       }
       details = { distance: cardio.distance || null, calories: cardio.calories || null }
+    } else if (isTimed) {
+      const valid = series.filter(s => s.time)
+      if (!valid.length) {
+        setError('Add at least one set with a duration.')
+        return
+      }
+      details = { series: valid.map((s, i) => ({ set: i + 1, time: s.time || null })) }
+    } else if (isBodyweight) {
+      const valid = series.filter(s => s.reps)
+      if (!valid.length) {
+        setError('Add at least one set with reps.')
+        return
+      }
+      details = { series: valid.map((s, i) => ({ set: i + 1, reps: s.reps || null })) }
     } else {
       const valid = series.filter(s => s.reps || s.weight)
       if (!valid.length) {
@@ -65,7 +95,8 @@ export default function WorkoutForm({ onAdd }) {
     try {
       await onAdd({ type, datetime, details })
       setCardio(emptyCardio)
-      setSeries([{ ...emptySeries }])
+      setSeries([emptySeriesForType(type)])
+      setDatetime(nowLocalDatetime())
     } catch (err) {
       setError(err.message)
     } finally {
@@ -87,6 +118,12 @@ export default function WorkoutForm({ onAdd }) {
               </optgroup>
               <optgroup label="Strength">
                 {STRENGTH_TYPES.map(t => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
+              </optgroup>
+              <optgroup label="Bodyweight">
+                {BODYWEIGHT_TYPES.map(t => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
+              </optgroup>
+              <optgroup label="Timed">
+                {TIMED_TYPES.map(t => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
               </optgroup>
             </select>
           </div>
@@ -131,27 +168,44 @@ export default function WorkoutForm({ onAdd }) {
                 <div className="set-num">
                   <div className="set-num-badge">{i + 1}</div>
                 </div>
-                <div>
-                  <label style={{ marginTop: 0 }}>Reps</label>
-                  <input
-                    type="number"
-                    min="0"
-                    placeholder="12"
-                    value={s.reps}
-                    onChange={e => updateSeries(i, 'reps', e.target.value)}
-                  />
-                </div>
-                <div>
-                  <label style={{ marginTop: 0 }}>Weight (kg)</label>
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.5"
-                    placeholder="20"
-                    value={s.weight}
-                    onChange={e => updateSeries(i, 'weight', e.target.value)}
-                  />
-                </div>
+                {isTimed ? (
+                  <div>
+                    <label style={{ marginTop: 0 }}>Duration (s)</label>
+                    <input
+                      type="number"
+                      min="0"
+                      placeholder="60"
+                      value={s.time}
+                      onChange={e => updateSeries(i, 'time', e.target.value)}
+                    />
+                  </div>
+                ) : (
+                  <>
+                    <div>
+                      <label style={{ marginTop: 0 }}>Reps</label>
+                      <input
+                        type="number"
+                        min="0"
+                        placeholder="12"
+                        value={s.reps}
+                        onChange={e => updateSeries(i, 'reps', e.target.value)}
+                      />
+                    </div>
+                    {!isBodyweight && (
+                      <div>
+                        <label style={{ marginTop: 0 }}>Weight (kg)</label>
+                        <input
+                          type="number"
+                          min="0"
+                          step="0.5"
+                          placeholder="20"
+                          value={s.weight}
+                          onChange={e => updateSeries(i, 'weight', e.target.value)}
+                        />
+                      </div>
+                    )}
+                  </>
+                )}
                 <button
                   type="button"
                   className="btn-danger"

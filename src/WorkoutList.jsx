@@ -1,4 +1,5 @@
 const CARDIO_TYPES = ['rowing', 'running', 'elliptical', 'bike']
+const TIMED_TYPES = ['plank']
 
 function dayLabel(iso) {
   const d = new Date(iso)
@@ -23,6 +24,13 @@ function summarize(type, details) {
   }
   const series = details.series ?? []
   if (!series.length) return '—'
+  if (TIMED_TYPES.includes(type)) {
+    const uniqueTimes = [...new Set(series.map(s => s.time).filter(Boolean))]
+    if (uniqueTimes.length <= 1) {
+      return `${series.length} × ${uniqueTimes[0] ?? '—'}s`
+    }
+    return series.map(s => `${s.time ?? '—'}s`).join(', ')
+  }
   const uniqueWeights = [...new Set(series.map(s => s.weight).filter(Boolean))]
   const uniqueReps = [...new Set(series.map(s => s.reps).filter(Boolean))]
   if (uniqueWeights.length <= 1 && uniqueReps.length <= 1) {
