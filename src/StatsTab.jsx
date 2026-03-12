@@ -6,8 +6,8 @@ const PAD = { top: 12, right: 8, bottom: 30, left: 40 }
 const plotW = W - PAD.left - PAD.right
 const plotH = H - PAD.top - PAD.bottom
 
-const COL_ACTUAL = '#3b82f6'
-const COL_ESTIMATED = '#3f3f46'
+const COL_ACTUAL = '#7c6eff'
+const COL_ESTIMATED = '#2c2c3e'
 
 export default function StatsTab({ workouts }) {
   const [hovered, setHovered] = useState(null)
