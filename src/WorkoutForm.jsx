@@ -43,7 +43,7 @@ export default function WorkoutForm({ onAdd, workouts }) {
   }
 
   function applyLastWorkout(t, wks) {
-    const last = [...wks].reverse().find(w => w.type === t)
+    const last = wks.find(w => w.type === t)
     if (!last) {
       setCardio(emptyCardio)
       setSeries([emptySeriesForType(t)])
