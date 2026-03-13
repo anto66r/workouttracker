@@ -53,12 +53,17 @@ export default function WorkoutForm({ onAdd, workouts }) {
     if (CARDIO_TYPES.includes(t)) {
       setCardio({ distance: d.distance ?? '', calories: d.calories ?? '' })
     } else {
-      const rows = (d.series ?? []).map(s => {
-        if (TIMED_TYPES.includes(t)) return { time: s.time ?? '' }
-        if (BODYWEIGHT_TYPES.includes(t)) return { reps: s.reps ?? '' }
-        return { reps: s.reps ?? '', weight: s.weight ?? '' }
-      })
-      setSeries(rows.length ? rows : [emptySeriesForType(t)])
+      const allSets = d.series ?? []
+      const lastSet = allSets[allSets.length - 1]
+      if (!lastSet) {
+        setSeries([emptySeriesForType(t)])
+      } else if (TIMED_TYPES.includes(t)) {
+        setSeries([{ time: lastSet.time ?? '' }])
+      } else if (BODYWEIGHT_TYPES.includes(t)) {
+        setSeries([{ reps: lastSet.reps ?? '' }])
+      } else {
+        setSeries([{ reps: lastSet.reps ?? '', weight: lastSet.weight ?? '' }])
+      }
     }
   }
 
@@ -73,6 +78,7 @@ export default function WorkoutForm({ onAdd, workouts }) {
     const t = e.target.value
     setType(t)
     applyLastWorkout(t, workouts)
+    setDatetime(nowLocalDatetime())
     setError(null)
   }
 
@@ -80,7 +86,10 @@ export default function WorkoutForm({ onAdd, workouts }) {
     setDatetime(nowLocalDatetime())
     setSeries(s => [...s, { ...s[s.length - 1] }])
   }
-  const removeSeries = (i) => setSeries(s => s.filter((_, idx) => idx !== i))
+  const removeSeries = (i) => {
+    setDatetime(nowLocalDatetime())
+    setSeries(s => s.filter((_, idx) => idx !== i))
+  }
   const updateSeries = (i, field, val) =>
     setSeries(s => s.map((row, idx) => idx === i ? { ...row, [field]: val } : row))
 
