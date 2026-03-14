@@ -40,7 +40,7 @@ if ($method === 'GET') {
     }
     $workouts = loadWorkouts($dataFile);
     $rawDatetime = $input['datetime'] ?? null;
-    $parsedDatetime = $rawDatetime ? date('c', strtotime($rawDatetime)) : date('c');
+    $parsedDatetime = $rawDatetime ?: date('Y-m-d\TH:i');
     $workout = [
         'id' => uniqid('w_', true),
         'datetime' => $parsedDatetime,

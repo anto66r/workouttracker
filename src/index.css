@@ -355,7 +355,7 @@ button {
 .chart-title {
   font-size: 0.65rem;
   font-weight: 700;
-  color: var(--text-3);
+  color: var(--text-2);
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin-bottom: 0.6rem;
@@ -375,7 +375,7 @@ button {
   gap: 0.35rem;
   font-size: 0.68rem;
   font-weight: 600;
-  color: var(--text-3);
+  color: var(--text-2);
 }
 
 .legend-dot {

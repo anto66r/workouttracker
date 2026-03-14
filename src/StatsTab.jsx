@@ -7,7 +7,7 @@ const plotW = W - PAD.left - PAD.right
 const plotH = H - PAD.top - PAD.bottom
 
 const COL_ACTUAL = '#7c6eff'
-const COL_ESTIMATED = '#2c2c3e'
+const COL_ESTIMATED = 'url(#hatch)'
 
 export default function StatsTab({ workouts }) {
   const [hovered, setHovered] = useState(null)
@@ -50,13 +50,18 @@ export default function StatsTab({ workouts }) {
       <div className="card chart-card">
         <div className="chart-title">Daily Calorie Burn — last 14 days</div>
         <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', display: 'block' }}>
+          <defs>
+            <pattern id="hatch" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(45)">
+              <line x1="0" y1="0" x2="0" y2="5" stroke="#5a5a7a" strokeWidth="2"/>
+            </pattern>
+          </defs>
           {/* Grid lines + Y labels */}
           {yTicks.map(v => {
             const y = PAD.top + plotH - (v / niceMax) * plotH
             return (
               <g key={v}>
                 <line x1={PAD.left} y1={y} x2={W - PAD.right} y2={y} stroke="#27272a" strokeWidth="1" />
-                <text x={PAD.left - 5} y={y + 4} textAnchor="end" fill="#52525b" fontSize="10">{v}</text>
+                <text x={PAD.left - 5} y={y + 4} textAnchor="end" fill="var(--text-2)" fontSize="10">{v}</text>
               </g>
             )
           })}
@@ -111,7 +116,7 @@ export default function StatsTab({ workouts }) {
                 )}
 
                 {showLabel && (
-                  <text x={x + barW / 2} y={PAD.top + plotH + 18} textAnchor="middle" fill="#52525b" fontSize="9.5">
+                  <text x={x + barW / 2} y={PAD.top + plotH + 18} textAnchor="middle" fill="var(--text-2)" fontSize="9.5">
                     {label}
                   </text>
                 )}
@@ -124,14 +129,15 @@ export default function StatsTab({ workouts }) {
                   const boxH = tipLines.length * lineH + 8
                   const boxW = 72
                   const bx = Math.min(Math.max(tx - boxW / 2, PAD.left), W - PAD.right - boxW)
+                  const by = Math.max(ty - boxH, PAD.top)
                   return (
                     <g>
-                      <rect x={bx} y={ty - boxH} width={boxW} height={boxH} fill="#27272a" rx="3" />
+                      <rect x={bx} y={by} width={boxW} height={boxH} fill="#27272a" rx="3" />
                       {tipLines.map((line, li) => (
                         <text
                           key={li}
                           x={bx + boxW / 2}
-                          y={ty - boxH + 14 + li * lineH}
+                          y={by + 14 + li * lineH}
                           textAnchor="middle"
                           fill={li === 0 && actual ? COL_ACTUAL : '#a1a1aa'}
                           fontSize="10"
@@ -151,7 +157,15 @@ export default function StatsTab({ workouts }) {
             <span className="legend-dot" style={{ background: COL_ACTUAL }} /> Logged calories
           </span>
           <span className="legend-item">
-            <span className="legend-dot" style={{ background: COL_ESTIMATED }} /> Calculated
+            <svg width="10" height="10" style={{ flexShrink: 0 }}>
+              <defs>
+                <pattern id="hatch-legend" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(45)">
+                  <line x1="0" y1="0" x2="0" y2="5" stroke="#5a5a7a" strokeWidth="2"/>
+                </pattern>
+              </defs>
+              <rect width="10" height="10" rx="2" fill="url(#hatch-legend)"/>
+            </svg>
+            {' '}Calculated
           </span>
         </div>
       </div>
