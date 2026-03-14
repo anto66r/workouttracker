@@ -10,8 +10,8 @@
   --accent-hover:#6a5cff;
   --accent-dim:  rgba(124, 110, 255, 0.12);
   --text-1:      #e4e4f0;
-  --text-2:      #9494b8;
-  --text-3:      #5c5c82;
+  --text-2:      #9898bc;
+  --text-3:      #7272a0;
   --danger:      #f87171;
   --danger-dim:  rgba(248, 113, 113, 0.08);
 }
@@ -91,6 +91,8 @@ input[type="datetime-local"] {
 }
 
 select { appearance: auto; }
+
+::placeholder { color: var(--text-3); opacity: 1; }
 
 select:focus, input:focus {
   border-color: var(--accent);
@@ -254,7 +256,7 @@ button {
 
 .wt-time {
   font-size: 0.75rem;
-  color: var(--text-3);
+  color: var(--text-2);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
   font-weight: 500;
@@ -278,7 +280,7 @@ button {
 
 .btn-del {
   background: transparent;
-  color: var(--text-3);
+  color: var(--text-2);
   font-size: 1rem;
   padding: 0.4rem 0.5rem;
   min-width: 2.25rem;
