@@ -1,11 +1,11 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:          #0c0c10;
-  --surface:     #131318;
-  --surface-2:   #1b1b24;
-  --border:      #21212e;
-  --border-hi:   #2c2c3e;
+  --bg:          #18181f;
+  --surface:     #22222c;
+  --surface-2:   #2a2a38;
+  --border:      #32323f;
+  --border-hi:   #3e3e52;
   --accent:      #7c6eff;
   --accent-hover:#6a5cff;
   --accent-dim:  rgba(124, 110, 255, 0.12);

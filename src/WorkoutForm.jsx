@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 const CARDIO_TYPES = ['bike', 'elliptical', 'rowing', 'running']
 const STRENGTH_TYPES = [
   'abs', 'back', 'biceps', 'calves', 'chest',
-  'forearms', 'glutes', 'hamstrings', 'quads', 'shoulders', 'triceps',
+  'forearms', 'glutes', 'hamstrings', 'lats', 'quads', 'shoulders', 'triceps',
 ]
 const BODYWEIGHT_TYPES = ['crunches']
 const TIMED_TYPES = ['plank']
