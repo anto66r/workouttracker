@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { dailyCalories } from './calories'
 import { useI18n } from './i18n'
+import { useUser } from './user'
 
 const W = 540, H = 160
 const PAD = { top: 12, right: 8, bottom: 30, left: 40 }
@@ -12,6 +13,7 @@ const COL_ESTIMATED = 'url(#hatch)'
 
 export default function StatsTab({ workouts }) {
   const { t, locale } = useI18n()
+  const { profile } = useUser()
   const [hovered, setHovered] = useState(null)
 
   const days = Array.from({ length: 14 }, (_, i) => {
@@ -20,7 +22,7 @@ export default function StatsTab({ workouts }) {
     return d.toISOString().slice(0, 10)
   })
 
-  const calorieMap = dailyCalories(workouts)
+  const calorieMap = dailyCalories(workouts, profile)
   const values = days.map(d => calorieMap[d]?.kcal ?? 0)
   const maxVal = Math.max(...values, 200)
   const niceMax = Math.ceil(maxVal / 100) * 100

@@ -1,10 +1,6 @@
 const CARDIO_TYPES = ['rowing', 'running', 'elliptical', 'bike']
 const TIMED_TYPES = ['plank']
 
-// User profile — used to scale calorie estimates
-const BODY_WEIGHT_KG = 75
-const HEIGHT_CM = 189
-
 // kcal per metre per kg of body weight (derived from standard MET values)
 const KCAL_PER_M_PER_KG = {
   rowing:    0.057 / 70,   // ~0.000814
@@ -19,14 +15,16 @@ const MET = {
   crunches: 3.8,
 }
 
-// Returns { kcal, estimated } or null if no data to work with
-export function estimateCalories(workout) {
+// Returns { kcal, estimated } or null if no data to work with.
+// `profile` supplies the body weight (kg) used to scale estimates.
+export function estimateCalories(workout, profile) {
   const { type, details } = workout
+  const bodyWeightKg = profile.bodyWeightKg
 
   if (CARDIO_TYPES.includes(type)) {
     if (details.calories) return { kcal: Number(details.calories), estimated: false }
     if (details.distance) {
-      const rate = (KCAL_PER_M_PER_KG[type] ?? KCAL_PER_M_PER_KG.running) * BODY_WEIGHT_KG
+      const rate = (KCAL_PER_M_PER_KG[type] ?? KCAL_PER_M_PER_KG.running) * bodyWeightKg
       return { kcal: Math.round(Number(details.distance) * rate), estimated: true }
     }
     return null
@@ -41,7 +39,7 @@ export function estimateCalories(workout) {
     let total = 0
     for (const s of series) {
       const secs = Number(s.time) || 0
-      total += met * BODY_WEIGHT_KG * (secs / 3600)
+      total += met * bodyWeightKg * (secs / 3600)
     }
     return { kcal: Math.round(total), estimated: true }
   }
@@ -51,7 +49,7 @@ export function estimateCalories(workout) {
     let total = 0
     for (const s of series) {
       const reps = Number(s.reps) || 0
-      total += reps * 0.35 * (BODY_WEIGHT_KG / 70)
+      total += reps * 0.35 * (bodyWeightKg / 70)
     }
     return { kcal: Math.round(total), estimated: true }
   }
@@ -62,19 +60,19 @@ export function estimateCalories(workout) {
     const reps = Number(s.reps) || 0
     const weight = Number(s.weight) || 0
     const base = 6 + reps * 0.2 + weight * reps * 0.005
-    total += base * (BODY_WEIGHT_KG / 70)
+    total += base * (bodyWeightKg / 70)
   }
 
   return { kcal: Math.round(total), estimated: true }
 }
 
 // Returns { [YYYY-MM-DD]: { kcal, actualKcal, estimatedKcal } }
-export function dailyCalories(workouts) {
+export function dailyCalories(workouts, profile) {
   const map = {}
 
   for (const w of workouts) {
     const day = w.datetime.slice(0, 10)
-    const result = estimateCalories(w)
+    const result = estimateCalories(w, profile)
     if (!result) continue
 
     if (!map[day]) map[day] = { kcal: 0, actualKcal: 0, estimatedKcal: 0 }

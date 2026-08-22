@@ -5,9 +5,9 @@ import ExerciseArt from './ExerciseArt'
 const CARDIO_TYPES = ['bike', 'elliptical', 'rowing', 'running']
 const STRENGTH_TYPES = [
   'abs', 'back', 'biceps', 'calves', 'chest',
-  'forearms', 'glutes', 'hamstrings', 'lats', 'quads', 'shoulders', 'triceps',
+  'forearms', 'glutes', 'hamstrings', 'lateralraise', 'lats', 'quads', 'seatedrow', 'shoulders', 'triceps',
 ]
-const BODYWEIGHT_TYPES = ['crunches']
+const BODYWEIGHT_TYPES = ['crunches', 'zancadas', 'squats']
 const TIMED_TYPES = ['plank']
 
 const ALL_TYPES = [...CARDIO_TYPES, ...STRENGTH_TYPES, ...BODYWEIGHT_TYPES, ...TIMED_TYPES]
@@ -183,14 +183,6 @@ export default function WorkoutForm({ onAdd, workouts }) {
           </div>
         </div>
 
-        <div className="exercise-detail">
-          <ExerciseArt type={type} className="exercise-art" />
-          <div className="exercise-detail-text">
-            <div className="exercise-detail-name">{t(`exercise.${type}`)}</div>
-            <div className="exercise-detail-hint">{t(`hint.${type}`)}</div>
-          </div>
-        </div>
-
         {isCardio ? (
           <div className="row row-2">
             <div>
@@ -216,6 +208,13 @@ export default function WorkoutForm({ onAdd, workouts }) {
           </div>
         ) : (
           <div>
+            <div className="exercise-detail">
+              <ExerciseArt type={type} className="exercise-art" />
+              <div className="exercise-detail-text">
+                <div className="exercise-detail-name">{t(`exercise.${type}`)}</div>
+                <div className="exercise-detail-hint">{t(`hint.${type}`)}</div>
+              </div>
+            </div>
             <div className="series-header">
               <span>{t('form.sets')}</span>
               <div className="series-header-inputs">

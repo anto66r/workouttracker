@@ -12,8 +12,9 @@ const DEFAULT_LANG = 'en'
 
 const translations = {
   en: {
-    'app.title': 'Workout Tracker',
+    'app.title': 'Workouts',
     'app.language': 'Language',
+    'app.user': 'User',
 
     'tab.history': 'History',
     'tab.stats': 'Stats',
@@ -78,6 +79,10 @@ const translations = {
     'exercise.triceps': 'Triceps',
     'exercise.crunches': 'Crunches',
     'exercise.plank': 'Plank',
+    'exercise.seatedrow': 'Seated Row',
+    'exercise.lateralraise': 'Lateral Raise',
+    'exercise.squats': 'Squats',
+    'exercise.zancadas': 'Lunges',
 
     'hint.bike': 'Steady spin — keep the cadence high.',
     'hint.elliptical': 'Full stride, push and pull with the handles.',
@@ -97,11 +102,16 @@ const translations = {
     'hint.triceps': 'Elbows still, extend all the way.',
     'hint.crunches': 'Short range, constant tension.',
     'hint.plank': 'Straight line from head to heels.',
+    'hint.seatedrow': 'Squeeze the shoulder blades, keep the back straight.',
+    'hint.lateralraise': 'Lead with the elbows, lift to shoulder height.',
+    'hint.squats': 'Knees track the toes, chest up.',
+    'hint.zancadas': 'Front knee over the ankle, back knee low.',
   },
 
   es: {
-    'app.title': 'Registro de Entrenamientos',
+    'app.title': 'Entrenamientos',
     'app.language': 'Idioma',
+    'app.user': 'Usuario',
 
     'tab.history': 'Historial',
     'tab.stats': 'Estadísticas',
@@ -166,6 +176,10 @@ const translations = {
     'exercise.triceps': 'Tríceps',
     'exercise.crunches': 'Encogimientos',
     'exercise.plank': 'Plancha',
+    'exercise.seatedrow': 'Remo sentado',
+    'exercise.lateralraise': 'Elevaciones laterales',
+    'exercise.squats': 'Sentadillas',
+    'exercise.zancadas': 'Zancadas',
 
     'hint.bike': 'Ritmo constante: mantén una cadencia alta.',
     'hint.elliptical': 'Zancada completa, empuja y tira de las agarraderas.',
@@ -185,6 +199,10 @@ const translations = {
     'hint.triceps': 'Codos quietos, extiende hasta el final.',
     'hint.crunches': 'Recorrido corto y tensión constante.',
     'hint.plank': 'Línea recta de la cabeza a los talones.',
+    'hint.seatedrow': 'Junta los omóplatos, espalda recta.',
+    'hint.lateralraise': 'Guía con los codos, sube hasta la altura del hombro.',
+    'hint.squats': 'Las rodillas siguen la punta de los pies, pecho arriba.',
+    'hint.zancadas': 'Rodilla delantera sobre el tobillo, rodilla trasera baja.',
   },
 }
 
