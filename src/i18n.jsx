@@ -51,6 +51,7 @@ const translations = {
     'list.today': 'Today',
     'list.yesterday': 'Yesterday',
     'list.delete': 'Delete',
+    'list.copyToForm': 'Copy to form',
 
     'stats.totalWorkouts': 'Total Workouts',
     'stats.kcal14': 'kcal (14 days)',
@@ -148,6 +149,7 @@ const translations = {
     'list.today': 'Hoy',
     'list.yesterday': 'Ayer',
     'list.delete': 'Eliminar',
+    'list.copyToForm': 'Copiar al formulario',
 
     'stats.totalWorkouts': 'Entrenamientos totales',
     'stats.kcal14': 'kcal (14 días)',
@@ -162,7 +164,7 @@ const translations = {
     'exercise.elliptical': 'Elíptica',
     'exercise.rowing': 'Remo',
     'exercise.running': 'Correr',
-    'exercise.abs': 'Abdominales',
+    'exercise.abs': 'Abdominales con peso',
     'exercise.back': 'Espalda',
     'exercise.biceps': 'Bíceps',
     'exercise.calves': 'Gemelos',
@@ -174,7 +176,7 @@ const translations = {
     'exercise.quads': 'Cuádriceps',
     'exercise.shoulders': 'Hombros',
     'exercise.triceps': 'Tríceps',
-    'exercise.crunches': 'Encogimientos',
+    'exercise.crunches': 'Abdominales',
     'exercise.plank': 'Plancha',
     'exercise.seatedrow': 'Remo sentado',
     'exercise.lateralraise': 'Elevaciones laterales',

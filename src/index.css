@@ -330,9 +330,14 @@ button {
   gap: 0.6rem;
   padding: 0.5rem 0.5rem;
   border-radius: 8px;
+  cursor: pointer;
   transition: background 0.1s;
 }
 .workout-row:hover { background: var(--surface); }
+.workout-row:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
 
 .wt-art {
   width: 1.35rem;

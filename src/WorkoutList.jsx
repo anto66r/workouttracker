@@ -47,7 +47,7 @@ function summarize(type, details, locale) {
   }).join(', ')
 }
 
-export default function WorkoutList({ workouts, onDelete }) {
+export default function WorkoutList({ workouts, onDelete, onSelect }) {
   const { t, locale } = useI18n()
 
   if (!workouts.length) {
@@ -70,14 +70,22 @@ export default function WorkoutList({ workouts, onDelete }) {
         <div className="day-group" key={day}>
           <div className="day-header">{dayLabel(items[0].datetime, locale, t)}</div>
           {items.map(w => (
-            <div className="workout-row" key={w.id}>
+            <div
+              className="workout-row"
+              key={w.id}
+              role="button"
+              tabIndex={0}
+              onClick={() => onSelect(w)}
+              onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect(w) } }}
+              title={t('list.copyToForm')}
+            >
               <span className="wt-time">{timeLabel(w.datetime, locale)}</span>
               <ExerciseArt type={w.type} className="wt-art" />
               <span className="wt-type">{t(`exercise.${w.type}`)}</span>
               <span className="wt-summary">{summarize(w.type, w.details, locale)}</span>
               <button
                 className="btn-del"
-                onClick={() => onDelete(w.id)}
+                onClick={e => { e.stopPropagation(); onDelete(w.id) }}
                 title={t('list.delete')}
                 aria-label={t('list.delete')}
               >×</button>

@@ -15,6 +15,7 @@ export default function App() {
   const [workouts, setWorkouts] = useState([])
   const [error, setError] = useState(null)
   const [tab, setTab] = useState('history')
+  const [copySource, setCopySource] = useState(null)
 
   const fetchWorkouts = useCallback(async () => {
     try {
@@ -46,6 +47,8 @@ export default function App() {
     setWorkouts(w => w.filter(x => x.id !== id))
   }
 
+  const copyToForm = (workout) => setCopySource({ ...workout })
+
   return (
     <div>
       <header className="app-header">
@@ -56,7 +59,7 @@ export default function App() {
         <LanguageSelector />
       </div>
       {error && <div className="error">{t(error)}</div>}
-      <WorkoutForm onAdd={addWorkout} workouts={workouts} />
+      <WorkoutForm onAdd={addWorkout} workouts={workouts} copySource={copySource} />
       <div className="tabs">
         <button
           className={`tab-btn${tab === 'history' ? ' active' : ''}`}
@@ -72,7 +75,7 @@ export default function App() {
         </button>
       </div>
       {tab === 'history'
-        ? <WorkoutList workouts={workouts} onDelete={deleteWorkout} />
+        ? <WorkoutList workouts={workouts} onDelete={deleteWorkout} onSelect={copyToForm} />
         : <StatsTab workouts={workouts} />
       }
     </div>

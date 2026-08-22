@@ -25,7 +25,7 @@ function nowLocalDatetime() {
     .slice(0, 16)
 }
 
-export default function WorkoutForm({ onAdd, workouts }) {
+export default function WorkoutForm({ onAdd, workouts, copySource }) {
   const { t, locale } = useI18n()
   const [type, setType] = useState(ALL_TYPES[0])
   const [datetime, setDatetime] = useState(nowLocalDatetime)
@@ -88,6 +88,31 @@ export default function WorkoutForm({ onAdd, workouts }) {
       setInitialized(true)
     }
   }, [workouts, initialized])
+
+  // Copy a specific workout from history into the form, full set list included.
+  useEffect(() => {
+    if (!copySource) return
+    const ex = copySource.type
+    setType(ex)
+    const d = copySource.details
+    if (CARDIO_TYPES.includes(ex)) {
+      setCardio({ distance: d.distance ?? '', calories: d.calories ?? '' })
+    } else {
+      const allSets = d.series ?? []
+      if (!allSets.length) {
+        setSeries([emptySeriesForType(ex)])
+      } else if (TIMED_TYPES.includes(ex)) {
+        setSeries(allSets.map(s => ({ time: s.time ?? '' })))
+      } else if (BODYWEIGHT_TYPES.includes(ex)) {
+        setSeries(allSets.map(s => ({ reps: s.reps ?? '' })))
+      } else {
+        setSeries(allSets.map(s => ({ reps: s.reps ?? '', weight: s.weight ?? '' })))
+      }
+    }
+    setDatetime(nowLocalDatetime())
+    setError(null)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [copySource])
 
   const handleTypeChange = (e) => {
     const ex = e.target.value
