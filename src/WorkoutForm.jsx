@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
+import { useI18n } from './i18n'
+import ExerciseArt from './ExerciseArt'
 
 const CARDIO_TYPES = ['bike', 'elliptical', 'rowing', 'running']
 const STRENGTH_TYPES = [
@@ -24,6 +26,7 @@ function nowLocalDatetime() {
 }
 
 export default function WorkoutForm({ onAdd, workouts }) {
+  const { t, locale } = useI18n()
   const [type, setType] = useState(ALL_TYPES[0])
   const [datetime, setDatetime] = useState(nowLocalDatetime)
   const [cardio, setCardio] = useState(emptyCardio)
@@ -36,30 +39,42 @@ export default function WorkoutForm({ onAdd, workouts }) {
   const isBodyweight = BODYWEIGHT_TYPES.includes(type)
   const isTimed = TIMED_TYPES.includes(type)
 
-  function emptySeriesForType(t) {
-    if (TIMED_TYPES.includes(t)) return { ...emptyTimedSeries }
-    if (BODYWEIGHT_TYPES.includes(t)) return { ...emptyBodyweightSeries }
+  // Option labels are translated, so the alphabetical order is locale-dependent
+  const groups = useMemo(() => {
+    const sorted = (types) =>
+      [...types].sort((a, b) => t(`exercise.${a}`).localeCompare(t(`exercise.${b}`), locale))
+    return [
+      { label: t('group.cardio'), types: sorted(CARDIO_TYPES) },
+      { label: t('group.strength'), types: sorted(STRENGTH_TYPES) },
+      { label: t('group.bodyweight'), types: sorted(BODYWEIGHT_TYPES) },
+      { label: t('group.timed'), types: sorted(TIMED_TYPES) },
+    ]
+  }, [t, locale])
+
+  function emptySeriesForType(ex) {
+    if (TIMED_TYPES.includes(ex)) return { ...emptyTimedSeries }
+    if (BODYWEIGHT_TYPES.includes(ex)) return { ...emptyBodyweightSeries }
     return { ...emptySeries }
   }
 
-  function applyLastWorkout(t, wks) {
-    const last = wks.find(w => w.type === t)
+  function applyLastWorkout(ex, wks) {
+    const last = wks.find(w => w.type === ex)
     if (!last) {
       setCardio(emptyCardio)
-      setSeries([emptySeriesForType(t)])
+      setSeries([emptySeriesForType(ex)])
       return
     }
     const d = last.details
-    if (CARDIO_TYPES.includes(t)) {
+    if (CARDIO_TYPES.includes(ex)) {
       setCardio({ distance: d.distance ?? '', calories: d.calories ?? '' })
     } else {
       const allSets = d.series ?? []
       const lastSet = allSets[allSets.length - 1]
       if (!lastSet) {
-        setSeries([emptySeriesForType(t)])
-      } else if (TIMED_TYPES.includes(t)) {
+        setSeries([emptySeriesForType(ex)])
+      } else if (TIMED_TYPES.includes(ex)) {
         setSeries([{ time: lastSet.time ?? '' }])
-      } else if (BODYWEIGHT_TYPES.includes(t)) {
+      } else if (BODYWEIGHT_TYPES.includes(ex)) {
         setSeries([{ reps: lastSet.reps ?? '' }])
       } else {
         setSeries([{ reps: lastSet.reps ?? '', weight: lastSet.weight ?? '' }])
@@ -75,9 +90,9 @@ export default function WorkoutForm({ onAdd, workouts }) {
   }, [workouts, initialized])
 
   const handleTypeChange = (e) => {
-    const t = e.target.value
-    setType(t)
-    applyLastWorkout(t, workouts)
+    const ex = e.target.value
+    setType(ex)
+    applyLastWorkout(ex, workouts)
     setDatetime(nowLocalDatetime())
     setError(null)
   }
@@ -100,28 +115,28 @@ export default function WorkoutForm({ onAdd, workouts }) {
     let details
     if (isCardio) {
       if (!cardio.distance && !cardio.calories) {
-        setError('Enter at least distance or calories.')
+        setError('error.cardioEmpty')
         return
       }
       details = { distance: cardio.distance || null, calories: cardio.calories || null }
     } else if (isTimed) {
       const valid = series.filter(s => s.time)
       if (!valid.length) {
-        setError('Add at least one set with a duration.')
+        setError('error.timeEmpty')
         return
       }
       details = { series: valid.map((s, i) => ({ set: i + 1, time: s.time || null })) }
     } else if (isBodyweight) {
       const valid = series.filter(s => s.reps)
       if (!valid.length) {
-        setError('Add at least one set with reps.')
+        setError('error.repsEmpty')
         return
       }
       details = { series: valid.map((s, i) => ({ set: i + 1, reps: s.reps || null })) }
     } else {
       const valid = series.filter(s => s.reps || s.weight)
       if (!valid.length) {
-        setError('Add at least one set with reps or weight.')
+        setError('error.repsWeightEmpty')
         return
       }
       details = { series: valid.map((s, i) => ({ set: i + 1, reps: s.reps || null, weight: s.weight || null })) }
@@ -142,29 +157,24 @@ export default function WorkoutForm({ onAdd, workouts }) {
 
   return (
     <div className="card">
-      <h2>Log Workout</h2>
-      {error && <div className="error">{error}</div>}
+      <h2>{t('form.title')}</h2>
+      {error && <div className="error">{t(error)}</div>}
       <form onSubmit={handleSubmit}>
         <div className="row row-2">
           <div>
-            <label>Type</label>
+            <label>{t('form.type')}</label>
             <select value={type} onChange={handleTypeChange}>
-              <optgroup label="Cardio">
-                {CARDIO_TYPES.map(t => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
-              </optgroup>
-              <optgroup label="Strength">
-                {STRENGTH_TYPES.map(t => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
-              </optgroup>
-              <optgroup label="Bodyweight">
-                {BODYWEIGHT_TYPES.map(t => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
-              </optgroup>
-              <optgroup label="Timed">
-                {TIMED_TYPES.map(t => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
-              </optgroup>
+              {groups.map(g => (
+                <optgroup key={g.label} label={g.label}>
+                  {g.types.map(ex => (
+                    <option key={ex} value={ex}>{t(`exercise.${ex}`)}</option>
+                  ))}
+                </optgroup>
+              ))}
             </select>
           </div>
           <div>
-            <label>Date & Time</label>
+            <label>{t('form.datetime')}</label>
             <input
               type="datetime-local"
               value={datetime}
@@ -173,24 +183,32 @@ export default function WorkoutForm({ onAdd, workouts }) {
           </div>
         </div>
 
+        <div className="exercise-detail">
+          <ExerciseArt type={type} className="exercise-art" />
+          <div className="exercise-detail-text">
+            <div className="exercise-detail-name">{t(`exercise.${type}`)}</div>
+            <div className="exercise-detail-hint">{t(`hint.${type}`)}</div>
+          </div>
+        </div>
+
         {isCardio ? (
           <div className="row row-2">
             <div>
-              <label>Distance (m)</label>
+              <label>{t('form.distance')}</label>
               <input
                 type="number"
                 min="0"
-                placeholder="e.g. 2000"
+                placeholder={t('form.placeholderDistance')}
                 value={cardio.distance}
                 onChange={e => setCardio(c => ({ ...c, distance: e.target.value }))}
               />
             </div>
             <div>
-              <label>Calories</label>
+              <label>{t('form.calories')}</label>
               <input
                 type="number"
                 min="0"
-                placeholder="e.g. 300"
+                placeholder={t('form.placeholderCalories')}
                 value={cardio.calories}
                 onChange={e => setCardio(c => ({ ...c, calories: e.target.value }))}
               />
@@ -199,14 +217,14 @@ export default function WorkoutForm({ onAdd, workouts }) {
         ) : (
           <div>
             <div className="series-header">
-              <span>Sets</span>
+              <span>{t('form.sets')}</span>
               <div className="series-header-inputs">
                 {isTimed ? (
-                  <span>Duration (s)</span>
+                  <span>{t('form.duration')}</span>
                 ) : (
                   <>
-                    <span>Reps</span>
-                    {!isBodyweight && <span>Weight (kg)</span>}
+                    <span>{t('form.reps')}</span>
+                    {!isBodyweight && <span>{t('form.weight')}</span>}
                   </>
                 )}
               </div>
@@ -221,7 +239,7 @@ export default function WorkoutForm({ onAdd, workouts }) {
                     <input
                       type="number"
                       min="0"
-                      placeholder="Duration (s)"
+                      placeholder={t('form.duration')}
                       value={s.time}
                       onChange={e => updateSeries(i, 'time', e.target.value)}
                     />
@@ -230,7 +248,7 @@ export default function WorkoutForm({ onAdd, workouts }) {
                       <input
                         type="number"
                         min="0"
-                        placeholder="Reps"
+                        placeholder={t('form.reps')}
                         value={s.reps}
                         onChange={e => updateSeries(i, 'reps', e.target.value)}
                       />
@@ -239,7 +257,7 @@ export default function WorkoutForm({ onAdd, workouts }) {
                           type="number"
                           min="0"
                           step="0.5"
-                          placeholder="Weight (kg)"
+                          placeholder={t('form.weight')}
                           value={s.weight}
                           onChange={e => updateSeries(i, 'weight', e.target.value)}
                         />
@@ -252,16 +270,17 @@ export default function WorkoutForm({ onAdd, workouts }) {
                   className="btn-danger"
                   onClick={() => removeSeries(i)}
                   disabled={series.length === 1}
-                  title="Remove set"
+                  title={t('form.removeSet')}
+                  aria-label={t('form.removeSet')}
                 >×</button>
               </div>
             ))}
-            <button type="button" className="btn-add" onClick={addSeries}>+ Add Set</button>
+            <button type="button" className="btn-add" onClick={addSeries}>{t('form.addSet')}</button>
           </div>
         )}
 
         <button type="submit" className="btn-primary" disabled={saving}>
-          {saving ? 'Saving…' : 'Log Workout'}
+          {saving ? t('form.saving') : t('form.submit')}
         </button>
       </form>
     </div>

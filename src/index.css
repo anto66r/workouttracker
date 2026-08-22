@@ -32,12 +32,47 @@ body {
 }
 
 /* ── Header ── */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
 h1 {
   font-size: 1.5rem;
   font-weight: 800;
   color: var(--text-1);
-  margin-bottom: 1.25rem;
   letter-spacing: -0.02em;
+}
+
+/* ── Language switch ── */
+.lang-switch {
+  display: flex;
+  flex-shrink: 0;
+  gap: 2px;
+  padding: 2px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.lang-btn {
+  background: transparent;
+  color: var(--text-3);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  transition: background 0.15s, color 0.15s;
+}
+.lang-btn:hover:not(.active) { color: var(--text-2); }
+.lang-btn.active {
+  background: var(--accent-dim);
+  color: var(--accent);
 }
 
 h2 {
@@ -97,6 +132,43 @@ select { appearance: auto; }
 select:focus, input:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-dim);
+}
+
+/* ── Exercise illustration ── */
+.exercise-detail {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin-top: 1rem;
+  padding: 0.75rem 0.875rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.exercise-art {
+  flex: 0 0 auto;
+  width: 3.25rem;
+  height: 3.25rem;
+  color: var(--accent);
+  overflow: visible;
+  object-fit: contain;
+}
+
+.exercise-detail-text { min-width: 0; }
+
+.exercise-detail-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-1);
+  line-height: 1.2;
+}
+
+.exercise-detail-hint {
+  font-size: 0.75rem;
+  color: var(--text-2);
+  margin-top: 0.15rem;
+  line-height: 1.35;
 }
 
 /* ── Grid helpers ── */
@@ -245,7 +317,7 @@ button {
 
 .workout-row {
   display: grid;
-  grid-template-columns: 3.5rem auto 1fr auto;
+  grid-template-columns: 3.5rem 1.35rem auto 1fr auto;
   align-items: center;
   gap: 0.6rem;
   padding: 0.5rem 0.5rem;
@@ -253,6 +325,14 @@ button {
   transition: background 0.1s;
 }
 .workout-row:hover { background: var(--surface); }
+
+.wt-art {
+  width: 1.35rem;
+  height: 1.35rem;
+  color: var(--text-2);
+  overflow: visible;
+  object-fit: contain;
+}
 
 .wt-time {
   font-size: 0.75rem;
@@ -414,9 +494,16 @@ button {
   }
 
   .workout-row {
-    grid-template-columns: 3rem auto 1fr auto;
+    grid-template-columns: 3rem 1.2rem auto 1fr auto;
     gap: 0.4rem;
     padding: 0.4rem 0.25rem;
+  }
+
+  .wt-art { width: 1.2rem; height: 1.2rem; }
+
+  .app-header {
+    flex-wrap: wrap;
+    gap: 0.5rem;
   }
 }
 

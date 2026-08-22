@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { dailyCalories } from './calories'
+import { useI18n } from './i18n'
 
 const W = 540, H = 160
 const PAD = { top: 12, right: 8, bottom: 30, left: 40 }
@@ -10,6 +11,7 @@ const COL_ACTUAL = '#7c6eff'
 const COL_ESTIMATED = 'url(#hatch)'
 
 export default function StatsTab({ workouts }) {
+  const { t, locale } = useI18n()
   const [hovered, setHovered] = useState(null)
 
   const days = Array.from({ length: 14 }, (_, i) => {
@@ -35,20 +37,20 @@ export default function StatsTab({ workouts }) {
       <div className="stats-summary">
         <div className="stat-box">
           <div className="stat-value">{workouts.length}</div>
-          <div className="stat-label">Total Workouts</div>
+          <div className="stat-label">{t('stats.totalWorkouts')}</div>
         </div>
         <div className="stat-box">
-          <div className="stat-value">{totalKcal.toLocaleString()}</div>
-          <div className="stat-label">kcal (14 days)</div>
+          <div className="stat-value">{totalKcal.toLocaleString(locale)}</div>
+          <div className="stat-label">{t('stats.kcal14')}</div>
         </div>
         <div className="stat-box">
           <div className="stat-value">{activeDays}</div>
-          <div className="stat-label">Active Days</div>
+          <div className="stat-label">{t('stats.activeDays')}</div>
         </div>
       </div>
 
       <div className="card chart-card">
-        <div className="chart-title">Daily Calorie Burn — last 14 days</div>
+        <div className="chart-title">{t('stats.chartTitle')}</div>
         <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', display: 'block' }}>
           <defs>
             <pattern id="hatch" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(45)">
@@ -80,13 +82,13 @@ export default function StatsTab({ workouts }) {
             const estimatedH = estimated ? Math.max((estimated / niceMax) * plotH, 2) : 0
 
             const d = new Date(day + 'T12:00:00')
-            const label = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+            const label = d.toLocaleDateString(locale, { month: 'short', day: 'numeric' })
             const showLabel = i % 2 === 0 || i === days.length - 1
 
             // Tooltip content
             const tipLines = []
-            if (actual) tipLines.push(`${actual} logged`)
-            if (estimated) tipLines.push(`${estimated} est.`)
+            if (actual) tipLines.push(t('stats.tipLogged', { n: actual }))
+            if (estimated) tipLines.push(t('stats.tipEstimated', { n: estimated }))
 
             return (
               <g key={day} onMouseEnter={() => setHovered(i)} onMouseLeave={() => setHovered(null)}>
@@ -127,7 +129,9 @@ export default function StatsTab({ workouts }) {
                   const ty = PAD.top + plotH - totalH - 6
                   const lineH = 13
                   const boxH = tipLines.length * lineH + 8
-                  const boxW = 72
+                  // Widen to fit the longest line — translated labels vary in length
+                  const longest = Math.max(...tipLines.map(l => l.length))
+                  const boxW = Math.max(72, longest * 5.4 + 14)
                   const bx = Math.min(Math.max(tx - boxW / 2, PAD.left), W - PAD.right - boxW)
                   const by = Math.max(ty - boxH, PAD.top)
                   return (
@@ -154,7 +158,7 @@ export default function StatsTab({ workouts }) {
 
         <div className="chart-legend">
           <span className="legend-item">
-            <span className="legend-dot" style={{ background: COL_ACTUAL }} /> Logged calories
+            <span className="legend-dot" style={{ background: COL_ACTUAL }} /> {t('stats.legendLogged')}
           </span>
           <span className="legend-item">
             <svg width="10" height="10" style={{ flexShrink: 0 }}>
@@ -165,7 +169,7 @@ export default function StatsTab({ workouts }) {
               </defs>
               <rect width="10" height="10" rx="2" fill="url(#hatch-legend)"/>
             </svg>
-            {' '}Calculated
+            {' '}{t('stats.legendCalculated')}
           </span>
         </div>
       </div>

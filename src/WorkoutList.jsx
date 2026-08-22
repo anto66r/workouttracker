@@ -1,24 +1,27 @@
+import { useI18n } from './i18n'
+import ExerciseArt from './ExerciseArt'
+
 const CARDIO_TYPES = ['rowing', 'running', 'elliptical', 'bike']
 const TIMED_TYPES = ['plank']
 
-function dayLabel(iso) {
+function dayLabel(iso, locale, t) {
   const d = new Date(iso)
   const today = new Date()
   const yesterday = new Date()
   yesterday.setDate(yesterday.getDate() - 1)
-  if (d.toDateString() === today.toDateString()) return 'Today'
-  if (d.toDateString() === yesterday.toDateString()) return 'Yesterday'
-  return d.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' })
+  if (d.toDateString() === today.toDateString()) return t('list.today')
+  if (d.toDateString() === yesterday.toDateString()) return t('list.yesterday')
+  return d.toLocaleDateString(locale, { weekday: 'long', month: 'short', day: 'numeric' })
 }
 
-function timeLabel(iso) {
-  return new Date(iso).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })
+function timeLabel(iso, locale) {
+  return new Date(iso).toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })
 }
 
-function summarize(type, details) {
+function summarize(type, details, locale) {
   if (CARDIO_TYPES.includes(type)) {
     const parts = []
-    if (details.distance) parts.push(`${Number(details.distance).toLocaleString()} m`)
+    if (details.distance) parts.push(`${Number(details.distance).toLocaleString(locale)} m`)
     if (details.calories) parts.push(`${details.calories} kcal`)
     return parts.join(' · ') || '—'
   }
@@ -45,10 +48,12 @@ function summarize(type, details) {
 }
 
 export default function WorkoutList({ workouts, onDelete }) {
+  const { t, locale } = useI18n()
+
   if (!workouts.length) {
     return (
       <div className="history">
-        <div className="empty">No workouts logged yet.</div>
+        <div className="empty">{t('list.empty')}</div>
       </div>
     )
   }
@@ -63,13 +68,19 @@ export default function WorkoutList({ workouts, onDelete }) {
     <div className="history">
       {Object.entries(grouped).map(([day, items]) => (
         <div className="day-group" key={day}>
-          <div className="day-header">{dayLabel(items[0].datetime)}</div>
+          <div className="day-header">{dayLabel(items[0].datetime, locale, t)}</div>
           {items.map(w => (
             <div className="workout-row" key={w.id}>
-              <span className="wt-time">{timeLabel(w.datetime)}</span>
-              <span className="wt-type">{w.type}</span>
-              <span className="wt-summary">{summarize(w.type, w.details)}</span>
-              <button className="btn-del" onClick={() => onDelete(w.id)} title="Delete">×</button>
+              <span className="wt-time">{timeLabel(w.datetime, locale)}</span>
+              <ExerciseArt type={w.type} className="wt-art" />
+              <span className="wt-type">{t(`exercise.${w.type}`)}</span>
+              <span className="wt-summary">{summarize(w.type, w.details, locale)}</span>
+              <button
+                className="btn-del"
+                onClick={() => onDelete(w.id)}
+                title={t('list.delete')}
+                aria-label={t('list.delete')}
+              >×</button>
             </div>
           ))}
         </div>
